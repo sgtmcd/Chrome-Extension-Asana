@@ -93,6 +93,16 @@ var showAddUi = function(url, title, selected_text, options) {
       $("#workspace").change(onWorkspaceChanged);
     });
   });
+  Asana.ServerModel.me(function(user) {
+    // Just to cache result.
+    Asana.ServerModel.projects(function(projects) {
+      $("#project").html("");
+      projects.forEach(function(project) {
+        $("#project").append(
+            "<li><input type='checkbox' value='"+ project.id + "'>" + project.name + "</li>");
+      });
+    });
+  });
 };
 
 // Enable/disable the add button.
@@ -155,6 +165,15 @@ var readWorkspaceId = function() {
   return $("#workspace").val();
 };
 
+var readProjectIds = function() {
+  console.log("reading ids");
+  var project_ids = [];
+  $('#project :checked').each(function() {
+   project_ids.push($(this).val());
+  });
+  return project_ids;
+};
+
 var createTask = function() {
   console.info("Creating task");
   hideError();
@@ -164,17 +183,43 @@ var createTask = function() {
       {
         name: $("#name").val(),
         notes: $("#notes").val(),
-        assignee: readAssignee()
+        assignee: readAssignee(),
+        assignee_status: $("#status").val()
       },
-      function(task) {
-        setAddWorking(false);
-        showSuccess(task);
-      },
-      function(response) {
-        setAddWorking(false);
-        showError(response.errors[0].message);
-      });
+      addProjectsToTask,
+      handleTaskCreationError
+    );
 };
+
+var addProjectsToTask = function(task) {
+  var project_ids = readProjectIds();
+  var number_of_projects = project_ids.length;
+  var number_added = 0;
+  if (number_of_projects == 0) {
+    setAddWorking(false);
+    showSuccess(task);
+  }
+  var finishSingleProjectAdd = function(response) {
+    if ((++number_added) == number_of_projects)
+      finishAllProjectAdds();
+  };
+  var finishAllProjectAdds = function(response) {
+    setAddWorking(false);
+    showSuccess(task);
+  };
+  for (var i=0;i<number_of_projects;i++) {
+    Asana.ServerModel.addProject(
+      task.id,
+      project_ids[i],
+      finishSingleProjectAdd,
+      handleTaskCreationError);
+  }
+};
+
+  var handleTaskCreationError = function(response) {
+    setAddWorking(false);
+    showError(response.errors[0].message);
+  };
 
 var showError = function(message) {
   console.log("Error: " + message);

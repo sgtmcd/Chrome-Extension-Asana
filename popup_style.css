@@ -2,7 +2,7 @@
 body {
   overflow: hidden;
   width: 410px;
-  height: 310px;  /* keep this correct for the window-based (non-button) version */
+  /* height: 310px;  /* keep this correct for the window-based (non-button) version */
   padding: 0px;
   margin: 0px;
   margin-top: 1px;
@@ -31,6 +31,11 @@ body {
 #content {
   padding: 10px 14px;
   width: 100%;
+}
+
+#content ul {
+  list-style-type: none;
+  padding: 0px;
 }
 
 #error {
@@ -70,7 +75,7 @@ body {
   font-size: 12px;
   font-weight: bold;
   color: #999999;
-  
+
 }
 .field-value {
     width: 294px;
@@ -100,7 +105,7 @@ body {
     text-align: center;
     font-weight: 600;
     width: 382px;
-    
+
 }
 .success-icon {
   background-image: url(sprite.png);

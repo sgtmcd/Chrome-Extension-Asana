@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Asana Extension for Chrome",
-  "version": "0.9.1",
-  "description": "Integrates Asana with your browsing experience.",
+  "name": "Asana Quick Add",
+  "version": "0.1.0",
+  "description": "best of the best",
   "icons": {
     "128": "icon128.png"
   },
@@ -10,7 +10,7 @@
 
   "browser_action": {
     "default_icon": "icon19.png",
-    "default_title": "Asana",
+    "default_title": "Mainsocial Asana",
     "default_popup": "popup.html"
   },
   "background": {
